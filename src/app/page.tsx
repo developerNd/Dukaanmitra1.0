@@ -1480,25 +1480,25 @@ export default function Home() {
 
       {/* AI Command Modal */}
       {commandOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-md bg-black/50 backdrop-blur-sm transition-opacity">
-          <div className="bg-white border border-outline-variant rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
-            <div className="px-lg py-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-md bg-black/60 backdrop-blur-sm">
+          <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col text-slate-800">
+            <div className="px-lg py-md border-b border-slate-200 flex justify-between items-center bg-slate-50">
               <div className="flex items-center gap-sm">
-                <span className="material-symbols-outlined text-secondary">auto_awesome</span>
-                <span className="font-bold text-lg text-primary">Execute AI Command</span>
+                <span className="material-symbols-outlined text-teal-600">auto_awesome</span>
+                <span className="font-bold text-lg text-slate-900">Execute AI Command</span>
               </div>
-              <button onClick={() => setCommandOpen(false)} className="p-1 hover:bg-surface-container-high rounded-full">
-                <span className="material-symbols-outlined">close</span>
+              <button onClick={() => setCommandOpen(false)} className="p-1 hover:bg-slate-200 rounded-full text-slate-500 transition-colors">
+                <span className="material-symbols-outlined text-base">close</span>
               </button>
             </div>
             
             <form onSubmit={handleSendCommand} className="p-lg space-y-md">
-              <p className="text-sm text-on-surface-variant">
+              <p className="text-sm text-slate-600 leading-relaxed">
                 Instruct the active AI employees. Your instruction will be translated into autonomous actions, and status updates will report directly to the activity feed.
               </p>
               
               <div className="space-y-sm">
-                <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
                   Select Target Agent
                 </label>
                 <div className="grid grid-cols-3 gap-sm">
@@ -1509,8 +1509,8 @@ export default function Home() {
                       onClick={() => setActiveTab(agentName as any)}
                       className={`px-3 py-2 border rounded-lg text-xs font-semibold transition-all ${
                         activeTab === agentName 
-                          ? "bg-secondary-container border-secondary text-on-secondary-container" 
-                          : "border-outline-variant hover:bg-surface-container"
+                          ? "bg-teal-50 border-teal-600 text-teal-800" 
+                          : "border-slate-200 hover:bg-slate-50 text-slate-700"
                       }`}
                     >
                       {agentName.replace(" Agent", "")}
@@ -1520,7 +1520,7 @@ export default function Home() {
               </div>
 
               <div className="space-y-sm">
-                <label htmlFor="command" className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                <label htmlFor="command" className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
                   Instruction Description
                 </label>
                 <textarea 
@@ -1530,7 +1530,7 @@ export default function Home() {
                   value={commandText}
                   onChange={(e) => setCommandText(e.target.value)}
                   placeholder="e.g., Draft a pricing message for Ramesh Kumar giving him a ₹5 per unit discount if he orders 100 more spools."
-                  className="w-full border border-outline-variant rounded-lg p-3 text-sm focus:outline-none focus:ring-1 focus:ring-secondary focus:border-secondary bg-white text-on-background"
+                  className="w-full border border-slate-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600 bg-white text-slate-900 placeholder-slate-400"
                 />
               </div>
 
@@ -1538,13 +1538,13 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => setCommandOpen(false)}
-                  className="px-4 py-2 border border-outline-variant hover:bg-surface-container rounded-lg text-sm font-semibold transition-all"
+                  className="px-4 py-2 border border-slate-200 hover:bg-slate-50 rounded-lg text-sm font-semibold text-slate-700 transition-all"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-primary hover:bg-secondary text-white rounded-lg text-sm font-semibold transition-all shadow-md"
+                  className="px-4 py-2 bg-teal-800 hover:bg-teal-900 text-white rounded-lg text-sm font-semibold transition-all shadow-md"
                 >
                   Send Command
                 </button>
@@ -1556,27 +1556,27 @@ export default function Home() {
 
       {/* WhatsApp Chat Inspector Modal */}
       {selectedChat && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-md bg-black/50 backdrop-blur-sm transition-opacity">
-          <div className="bg-white border border-outline-variant rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col h-[80vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-md bg-black/60 backdrop-blur-sm">
+          <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col h-[80vh] text-slate-800">
             
             {/* Header */}
-            <div className="px-lg py-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+            <div className="px-lg py-md border-b border-slate-200 flex justify-between items-center bg-slate-50">
               <div className="flex items-center gap-md">
-                <div className="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-lg">
+                <div className="w-10 h-10 rounded-full bg-teal-50 text-teal-800 border border-teal-200 flex items-center justify-center font-bold text-lg">
                   {selectedChat.customerName.charAt(0)}
                 </div>
                 <div>
-                  <div className="font-bold text-primary text-base flex items-center gap-xs">
+                  <div className="font-bold text-slate-900 text-base flex items-center gap-xs">
                     {selectedChat.customerName}
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container uppercase animate-pulse">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-900 uppercase animate-pulse">
                       {selectedChat.agent}
                     </span>
                   </div>
-                  <div className="text-xs text-on-surface-variant">{selectedChat.phone}</div>
+                  <div className="text-xs text-slate-500">{selectedChat.phone}</div>
                 </div>
               </div>
-              <button onClick={() => setSelectedChat(null)} className="p-1 hover:bg-surface-container-high rounded-full">
-                <span className="material-symbols-outlined">close</span>
+              <button onClick={() => setSelectedChat(null)} className="p-1 hover:bg-slate-200 rounded-full text-slate-500 transition-colors">
+                <span className="material-symbols-outlined text-base">close</span>
               </button>
             </div>
 
