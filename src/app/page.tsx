@@ -1480,38 +1480,108 @@ export default function Home() {
 
       {/* AI Command Modal */}
       {commandOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-md bg-black/60 backdrop-blur-sm">
-          <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col text-slate-800">
-            <div className="px-lg py-md border-b border-slate-200 flex justify-between items-center bg-slate-50">
-              <div className="flex items-center gap-sm">
-                <span className="material-symbols-outlined text-teal-600">auto_awesome</span>
-                <span className="font-bold text-lg text-slate-900">Execute AI Command</span>
+        <div 
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "16px",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            backdropFilter: "blur(4px)"
+          }}
+        >
+          <div 
+            style={{
+              backgroundColor: "white", 
+              border: "1px solid #e2e8f0", 
+              borderRadius: "1rem", 
+              width: "100%", 
+              maxWidth: "512px", 
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)", 
+              overflow: "hidden", 
+              display: "flex", 
+              flexDirection: "column",
+              boxSizing: "border-box",
+              color: "#334155"
+            }}
+          >
+            <div 
+              style={{
+                padding: "16px 24px", 
+                borderBottom: "1px solid #e2e8f0", 
+                display: "flex", 
+                justifyContent: "space-between", 
+                alignItems: "center", 
+                backgroundColor: "#f8fafc",
+                width: "100%",
+                boxSizing: "border-box"
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <span className="material-symbols-outlined" style={{ color: "#0d9488" }}>auto_awesome</span>
+                <span style={{ fontWeight: "700", fontSize: "1.125rem", color: "#0f172a" }}>Execute AI Command</span>
               </div>
-              <button onClick={() => setCommandOpen(false)} className="p-1 hover:bg-slate-200 rounded-full text-slate-500 transition-colors">
-                <span className="material-symbols-outlined text-base">close</span>
+              <button 
+                onClick={() => setCommandOpen(false)} 
+                style={{
+                  padding: "4px",
+                  backgroundColor: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  borderRadius: "9999px",
+                  color: "#64748b",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: "1.25rem" }}>close</span>
               </button>
             </div>
             
-            <form onSubmit={handleSendCommand} className="p-lg space-y-md">
-              <p className="text-sm text-slate-600 leading-relaxed">
+            <form 
+              onSubmit={handleSendCommand} 
+              style={{
+                padding: "24px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+                width: "100%",
+                boxSizing: "border-box",
+                margin: 0
+              }}
+            >
+              <p style={{ margin: 0, fontSize: "0.875rem", color: "#475569", lineHeight: "1.5" }}>
                 Instruct the active AI employees. Your instruction will be translated into autonomous actions, and status updates will report directly to the activity feed.
               </p>
               
-              <div className="space-y-sm">
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px", width: "100%" }}>
+                <label style={{ fontSize: "0.75rem", fontWeight: "700", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Select Target Agent
                 </label>
-                <div className="grid grid-cols-3 gap-sm">
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "8px", width: "100%" }}>
                   {["Sales Agent", "Recovery Agent", "Inventory Agent"].map(agentName => (
                     <button
                       key={agentName}
                       type="button"
                       onClick={() => setActiveTab(agentName as any)}
-                      className={`px-3 py-2 border rounded-lg text-xs font-semibold transition-all ${
-                        activeTab === agentName 
-                          ? "bg-teal-50 border-teal-600 text-teal-800" 
-                          : "border-slate-200 hover:bg-slate-50 text-slate-700"
-                      }`}
+                      style={{
+                        padding: "8px 12px",
+                        border: "1px solid",
+                        borderColor: activeTab === agentName ? "#0d9488" : "#e2e8f0",
+                        backgroundColor: activeTab === agentName ? "#f0fdfa" : "transparent",
+                        color: activeTab === agentName ? "#115e59" : "#334155",
+                        borderRadius: "0.5rem",
+                        fontSize: "0.75rem",
+                        fontWeight: "600",
+                        cursor: "pointer"
+                      }}
                     >
                       {agentName.replace(" Agent", "")}
                     </button>
@@ -1519,8 +1589,8 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="space-y-sm">
-                <label htmlFor="command" className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px", width: "100%" }}>
+                <label htmlFor="command" style={{ fontSize: "0.75rem", fontWeight: "700", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Instruction Description
                 </label>
                 <textarea 
@@ -1530,21 +1600,51 @@ export default function Home() {
                   value={commandText}
                   onChange={(e) => setCommandText(e.target.value)}
                   placeholder="e.g., Draft a pricing message for Ramesh Kumar giving him a ₹5 per unit discount if he orders 100 more spools."
-                  className="w-full border border-slate-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600 bg-white text-slate-900 placeholder-slate-400"
+                  style={{
+                    width: "100%",
+                    border: "1px solid #cbd5e1",
+                    borderRadius: "0.5rem",
+                    padding: "12px",
+                    fontSize: "0.875rem",
+                    backgroundColor: "white",
+                    color: "#0f172a",
+                    boxSizing: "border-box",
+                    outline: "none",
+                    fontFamily: "inherit"
+                  }}
                 />
               </div>
 
-              <div className="flex justify-end gap-md pt-2">
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", marginTop: "8px", width: "100%" }}>
                 <button
                   type="button"
                   onClick={() => setCommandOpen(false)}
-                  className="px-4 py-2 border border-slate-200 hover:bg-slate-50 rounded-lg text-sm font-semibold text-slate-700 transition-all"
+                  style={{
+                    padding: "8px 16px",
+                    border: "1px solid #cbd5e1",
+                    backgroundColor: "white",
+                    color: "#334155",
+                    borderRadius: "0.5rem",
+                    fontSize: "0.875rem",
+                    fontWeight: "600",
+                    cursor: "pointer"
+                  }}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-teal-800 hover:bg-teal-900 text-white rounded-lg text-sm font-semibold transition-all shadow-md"
+                  style={{
+                    padding: "8px 16px",
+                    backgroundColor: "#115e59",
+                    color: "white",
+                    borderRadius: "0.5rem",
+                    fontSize: "0.875rem",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    border: "none",
+                    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+                  }}
                 >
                   Send Command
                 </button>
