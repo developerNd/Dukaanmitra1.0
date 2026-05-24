@@ -1,0 +1,64 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:../dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Product {
+  id               String @id
+  name             String
+  stock            Int
+  threshold        Int
+  status           String
+  demandPrediction String
+  category         String
+  stockText        String
+  coverageDays     Int
+  statusColor      String
+}
+
+model Invoice {
+  id            String @id
+  customer      String
+  amount        Float
+  dueDate       String
+  overdueDays   Int
+  status        String
+  remindersSent Int
+  actionText    String
+  actionType    String
+  statusColor   String
+}
+
+model Conversation {
+  id           String @id
+  customerName String
+  phone        String
+  lastMessage  String
+  intent       String
+  agent        String
+  messages     Message[]
+}
+
+model Message {
+  id             String @id @default(cuid())
+  sender         String
+  text           String
+  time           String
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+model FeedItem {
+  id        String   @id @default(cuid())
+  time      String
+  agent     String
+  text      String
+  icon      String
+  iconBg    String
+  iconColor String
+  createdAt DateTime @default(now())
+}

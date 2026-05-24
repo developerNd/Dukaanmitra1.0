@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DukanMitra AI Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Hanken+Grotesk:wght@600;700;900&amp;family=JetBrains+Mono:wght@500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-surface": "#2d3133",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "outline": "#75777d",
+                        "inverse-on-surface": "#eff1f3",
+                        "tertiary-fixed": "#e1e0ff",
+                        "primary-container": "#1e293b",
+                        "primary-fixed-dim": "#bcc7de",
+                        "secondary": "#006a61",
+                        "on-tertiary-fixed-variant": "#2f2ebe",
+                        "on-tertiary-fixed": "#07006c",
+                        "primary-fixed": "#d8e3fb",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary-fixed": "#00201d",
+                        "surface-tint": "#545f73",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#eceef0",
+                        "on-secondary-container": "#006f66",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "on-surface": "#191c1e",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#d8dadc",
+                        "surface-container-low": "#f2f4f6",
+                        "tertiary": "#040057",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#111c2d",
+                        "on-tertiary-container": "#7f82ff",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "primary": "#091426",
+                        "surface": "#f7f9fb",
+                        "on-surface-variant": "#45474c",
+                        "tertiary-container": "#0d0093",
+                        "secondary-container": "#86f2e4",
+                        "outline-variant": "#c5c6cd",
+                        "surface-variant": "#e0e3e5",
+                        "background": "#f7f9fb",
+                        "on-primary-fixed-variant": "#3c475a",
+                        "on-secondary-fixed-variant": "#005049",
+                        "on-primary-container": "#8590a6",
+                        "inverse-primary": "#bcc7de",
+                        "secondary-fixed": "#89f5e7",
+                        "surface-container-highest": "#e0e3e5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "8px",
+                        "container-margin": "24px",
+                        "base": "4px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "lg": "24px",
+                        "sm": "12px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "label-caps": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-ai {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 106, 97, 0.2);
+        }
+        .shimmer-text {
+            background: linear-gradient(90deg, #006a61 0%, #0d0093 50%, #006a61 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shimmer 2s linear infinite;
+        }
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+        .pulse-dot {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .5; transform: scale(1.2); }
+        }
+        .card-shadow {
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.03);
+        }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-background">
+<!-- Top Navigation Shell -->
+<header class="flex justify-between items-center w-full px-lg h-16 sticky top-0 z-50 bg-surface dark:bg-on-background border-b border-outline-variant dark:border-outline">
+<div class="flex items-center gap-md">
+<span class="font-display-lg text-display-lg font-bold text-primary dark:text-primary-fixed">DukanMitra</span>
+<nav class="hidden md:flex gap-md ml-xl">
+<a class="text-primary dark:text-primary-fixed font-bold border-b-2 border-secondary px-xs py-base" href="#">Overview</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors px-xs py-base rounded" href="#">Analytics</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors px-xs py-base rounded" href="#">Inventory</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<div class="relative group">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer p-xs hover:bg-surface-container-low rounded-full transition-colors" data-icon="notifications">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer p-xs hover:bg-surface-container-low rounded-full transition-colors" data-icon="chat_sparkle">chat_spark</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="Business Owner Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a young, confident South Asian business owner in a modern, brightly lit office environment. He is wearing a clean, navy blue smart-casual shirt. The background is a soft-focus office with minimalist wood paneling and green plants, creating a reliable and successful corporate atmosphere. The lighting is soft and flattering, reflecting a high-tech light-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAo1lM9GwVSfseeqhc627zRcHQA0hc15MBYQgBcYe-NyZmCRnQksXn3OTijpaeY-uDH4_5nla5HU-x63ndynh14zBjnLZf7eYun5lZhsdalfGy6SZIaNHDFChdRLmy3vyNXXq4mmeZAOmWGvDabSxIbE3zswd2ChzovBSqC8Kw56_zgaKoOkQrjlwsnL3b6zZaZOxO8TzqBzif_IJxb_ls0QluHPv6tNujg53Nq6YRcByRv3s0y7HGM7RI9fsdB_TuuTwYnlz185fY"/>
+</div>
+</div>
+</header>
+<div class="flex">
+<!-- Sidebar Shell -->
+<aside class="flex flex-col h-full py-xl fixed left-0 top-16 z-40 bg-surface-container dark:bg-on-background border-r border-outline-variant dark:border-outline w-[280px] hidden md:flex">
+<div class="px-md mb-xl">
+<div class="flex items-center gap-sm mb-xs">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps text-primary">Overview</span>
+</div>
+</div>
+<nav class="flex-grow space-y-1">
+<div class="bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-lg mx-md flex items-center gap-md px-md py-sm cursor-pointer translate-x-1 transition-transform">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md">Overview</span>
+</div>
+<div class="text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-lg mx-md flex items-center gap-md px-md py-sm cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-body-md">Sales Agent</span>
+</div>
+<div class="text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-lg mx-md flex items-center gap-md px-md py-sm cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="request_quote">request_quote</span>
+<span class="font-body-md">Recovery Agent</span>
+</div>
+<div class="text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-lg mx-md flex items-center gap-md px-md py-sm cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-body-md">Inventory Agent</span>
+</div>
+</nav>
+<div class="mt-auto px-md space-y-md">
+<button class="w-full bg-gradient-to-r from-secondary to-tertiary-container text-white py-sm rounded-lg font-body-md flex items-center justify-center gap-sm hover:opacity-90 transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                    AI Command
+                </button>
+<div class="pt-md border-t border-outline-variant">
+<div class="text-on-surface-variant flex items-center gap-md px-md py-sm hover:bg-surface-container-high rounded-lg cursor-pointer">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</div>
+<div class="text-on-surface-variant flex items-center gap-md px-md py-sm hover:bg-surface-container-high rounded-lg cursor-pointer">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Help Center</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-grow ml-0 md:ml-[280px] p-container-margin">
+<!-- Top Section: KPI Cards -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-lg mb-xl">
+<!-- KPI: Total Sales -->
+<div class="bg-white border border-outline-variant rounded-xl p-lg card-shadow">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-label-caps text-label-caps text-on-surface-variant">TOTAL_SALES_MTD</span>
+<span class="material-symbols-outlined text-secondary" data-icon="trending_up">trending_up</span>
+</div>
+<div class="font-headline-lg text-headline-lg text-primary">₹1,24,000</div>
+<div class="flex items-center gap-xs mt-base text-secondary font-body-sm">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_upward">arrow_upward</span>
+<span>12.5% vs last month</span>
+</div>
+</div>
+<!-- KPI: Pending Invoices -->
+<div class="bg-white border border-outline-variant rounded-xl p-lg card-shadow">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-label-caps text-label-caps text-on-surface-variant">PENDING_INVOICES</span>
+<span class="material-symbols-outlined text-error" data-icon="request_quote">request_quote</span>
+</div>
+<div class="font-headline-lg text-headline-lg text-primary">₹45,000</div>
+<div class="flex items-center gap-xs mt-base text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span>8 invoices overdue</span>
+</div>
+</div>
+<!-- KPI: Low Stock Alerts -->
+<div class="bg-white border border-outline-variant rounded-xl p-lg card-shadow">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-label-caps text-label-caps text-on-surface-variant">STOCK_ALERTS</span>
+<span class="material-symbols-outlined text-warning text-on-secondary-container" data-icon="warning">warning</span>
+</div>
+<div class="font-headline-lg text-headline-lg text-primary">3 items</div>
+<div class="flex items-center gap-xs mt-base text-on-secondary-container font-body-sm">
+<span class="material-symbols-outlined text-sm" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span>AI suggested reorder ready</span>
+</div>
+</div>
+</section>
+<!-- Middle Section: AI Employees & Feed -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-lg mb-xl">
+<!-- AI Employee Status Panel (Left/Center) -->
+<div class="lg:col-span-8">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-secondary" data-icon="smart_toy">smart_toy</span>
+<h2 class="font-headline-md text-headline-md text-primary">AI Employee Status</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<!-- Sales Agent -->
+<div class="glass-ai rounded-xl p-md flex flex-col h-full card-shadow">
+<div class="flex justify-between items-center mb-sm">
+<span class="font-label-caps text-label-caps">SALES_AGENT</span>
+<div class="flex items-center gap-1 bg-secondary-container px-2 py-0.5 rounded-full">
+<span class="w-2 h-2 bg-secondary rounded-full pulse-dot"></span>
+<span class="text-[10px] font-bold text-on-secondary-container">ACTIVE</span>
+</div>
+</div>
+<div class="font-body-md text-primary mb-xs">Sales Agent</div>
+<div class="text-on-surface-variant font-body-sm italic mt-auto">
+                                Chatting with <span class="font-data-mono text-secondary">+91-98765-XXXXX</span> about Bulk Order #442.
+                            </div>
+</div>
+<!-- Recovery Agent -->
+<div class="glass-ai rounded-xl p-md flex flex-col h-full card-shadow">
+<div class="flex justify-between items-center mb-sm">
+<span class="font-label-caps text-label-caps">RECOVERY_AGENT</span>
+<div class="flex items-center gap-1 bg-tertiary-fixed px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[12px] text-tertiary" data-icon="psychology">psychology</span>
+<span class="text-[10px] font-bold text-tertiary">THINKING</span>
+</div>
+</div>
+<div class="font-body-md text-primary mb-xs">Recovery Agent</div>
+<div class="shimmer-text font-data-mono text-body-sm mt-auto">
+                                Drafting 5-day reminder for Invoice #1024...
+                            </div>
+</div>
+<!-- Inventory Agent -->
+<div class="bg-white border border-outline-variant rounded-xl p-md flex flex-col h-full card-shadow opacity-75">
+<div class="flex justify-between items-center mb-sm">
+<span class="font-label-caps text-label-caps">INVENTORY_AGENT</span>
+<div class="flex items-center gap-1 bg-surface-container px-2 py-0.5 rounded-full">
+<span class="text-[10px] font-bold text-on-surface-variant">IDLE</span>
+</div>
+</div>
+<div class="font-body-md text-primary mb-xs">Inventory Agent</div>
+<div class="text-on-surface-variant font-body-sm mt-auto">
+                                Monitoring stock levels in real-time.
+                            </div>
+</div>
+</div>
+<!-- Bottom Section of Grid: Active WhatsApp Conversations -->
+<div class="mt-xl">
+<div class="flex items-center justify-between mb-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="chat">chat</span>
+<h2 class="font-headline-md text-headline-md text-primary">Active WhatsApp Conversations</h2>
+</div>
+<button class="text-secondary font-label-caps hover:underline">View All</button>
+</div>
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden card-shadow">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="px-md py-sm font-label-caps text-on-surface-variant border-b border-outline-variant">Customer</th>
+<th class="px-md py-sm font-label-caps text-on-surface-variant border-b border-outline-variant">Last Message</th>
+<th class="px-md py-sm font-label-caps text-on-surface-variant border-b border-outline-variant">AI Intent</th>
+<th class="px-md py-sm font-label-caps text-on-surface-variant border-b border-outline-variant">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="px-md py-md border-b border-outline-variant">
+<div class="flex flex-col">
+<span class="font-body-md font-bold text-primary">Ramesh Kumar</span>
+<span class="text-xs text-on-surface-variant">+91 99880 12345</span>
+</div>
+</td>
+<td class="px-md py-md border-b border-outline-variant">
+<p class="text-body-sm text-on-surface truncate max-w-[240px]">"Can you confirm the delivery date for my bulk order?"</p>
+</td>
+<td class="px-md py-md border-b border-outline-variant">
+<span class="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-2 py-1 rounded">ORDER_QUERY</span>
+</td>
+<td class="px-md py-md border-b border-outline-variant">
+<button class="p-base hover:bg-surface-container-high rounded transition-all">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="px-md py-md border-b border-outline-variant">
+<div class="flex flex-col">
+<span class="font-body-md font-bold text-primary">Anita Textiles</span>
+<span class="text-xs text-on-surface-variant">+91 76543 09871</span>
+</div>
+</td>
+<td class="px-md py-md border-b border-outline-variant">
+<p class="text-body-sm text-on-surface truncate max-w-[240px]">"I want to negotiate the price for 500 units."</p>
+</td>
+<td class="px-md py-md border-b border-outline-variant">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-bold px-2 py-1 rounded">NEGOTIATION</span>
+</td>
+<td class="px-md py-md border-b border-outline-variant">
+<button class="p-base hover:bg-surface-container-high rounded transition-all">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Live Activity Feed (Right Panel) -->
+<div class="lg:col-span-4 h-full">
+<div class="flex items-center justify-between mb-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="bolt">bolt</span>
+<h2 class="font-headline-md text-headline-md text-primary">Live AI Activity</h2>
+</div>
+<span class="w-2 h-2 bg-secondary rounded-full pulse-dot"></span>
+</div>
+<div class="bg-white border border-outline-variant rounded-xl p-md h-[calc(100%-48px)] max-h-[600px] overflow-y-auto card-shadow scrollbar-hide">
+<div class="space-y-lg">
+<!-- Feed Item -->
+<div class="flex gap-md">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="send">send</span>
+</div>
+<div class="w-0.5 h-full bg-outline-variant my-1"></div>
+</div>
+<div class="pb-md">
+<div class="font-label-caps text-[10px] text-on-surface-variant mb-base">NOW</div>
+<div class="text-body-sm">
+<span class="font-bold text-primary">Sales Agent</span> sent a product catalog to <span class="font-data-mono">+91-XXXXX</span>.
+                                    </div>
+</div>
+</div>
+<!-- Feed Item -->
+<div class="flex gap-md">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-sm" data-icon="receipt_long">receipt_long</span>
+</div>
+<div class="w-0.5 h-full bg-outline-variant my-1"></div>
+</div>
+<div class="pb-md">
+<div class="font-label-caps text-[10px] text-on-surface-variant mb-base">2 MIN AGO</div>
+<div class="text-body-sm">
+<span class="font-bold text-primary">Recovery Agent</span> updated invoice status for <span class="font-data-mono">#INV-982</span>.
+                                    </div>
+</div>
+</div>
+<!-- Feed Item -->
+<div class="flex gap-md">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="inventory_2">inventory_2</span>
+</div>
+<div class="w-0.5 h-full bg-outline-variant my-1"></div>
+</div>
+<div class="pb-md">
+<div class="font-label-caps text-[10px] text-on-surface-variant mb-base">15 MIN AGO</div>
+<div class="text-body-sm">
+<span class="font-bold text-primary">Inventory Agent</span> flagged "Organic Cotton Thread" as low stock.
+                                    </div>
+</div>
+</div>
+<!-- Feed Item -->
+<div class="flex gap-md">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="done_all">done_all</span>
+</div>
+</div>
+<div>
+<div class="font-label-caps text-[10px] text-on-surface-variant mb-base">45 MIN AGO</div>
+<div class="text-body-sm">
+<span class="font-bold text-primary">Sales Agent</span> closed order <span class="font-data-mono">#ORD-441</span> automatically.
+                                    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Floating Action Button -->
+<button class="fixed bottom-lg right-lg bg-primary text-white p-lg rounded-full shadow-lg flex items-center gap-md hover:scale-105 transition-all z-50">
+<span class="material-symbols-outlined" data-icon="smart_toy" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<span class="font-bold pr-base">Ask AI</span>
+</button>
+<script>
+        // Micro-interaction for table rows
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('click', () => {
+                row.classList.add('bg-secondary-container/20');
+                setTimeout(() => row.classList.remove('bg-secondary-container/20'), 300);
+            });
+        });
+
+        // Simulating Live Feed updates
+        const feed = document.querySelector('.scrollbar-hide');
+        setInterval(() => {
+            // Logic for visual shimmer or pulse can go here if needed
+        }, 3000);
+    </script>
+</body></html>

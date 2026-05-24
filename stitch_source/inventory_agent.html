@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DukanMitra AI | Inventory Agent</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Hanken+Grotesk:wght@600;700&amp;family=JetBrains+Mono:wght@500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-ai {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid #86f2e4;
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(134, 242, 228, 0.2), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .pulse-teal {
+            box-shadow: 0 0 0 0 rgba(0, 106, 97, 0.4);
+            animation: pulse-teal 2s infinite;
+        }
+        @keyframes pulse-teal {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 106, 97, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 106, 97, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 106, 97, 0); }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#d8e3fb",
+                        "on-secondary": "#ffffff",
+                        "background": "#f7f9fb",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "surface": "#f7f9fb",
+                        "tertiary-fixed": "#e1e0ff",
+                        "secondary": "#006a61",
+                        "on-surface-variant": "#45474c",
+                        "on-secondary-container": "#006f66",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#e0e3e5",
+                        "on-secondary-fixed": "#00201d",
+                        "secondary-container": "#86f2e4",
+                        "secondary-fixed": "#89f5e7",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary": "#040057",
+                        "on-background": "#191c1e",
+                        "primary": "#091426",
+                        "outline-variant": "#c5c6cd",
+                        "on-tertiary-container": "#7f82ff",
+                        "surface-container": "#eceef0",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary-fixed-variant": "#005049",
+                        "surface-tint": "#545f73",
+                        "primary-container": "#1e293b",
+                        "on-tertiary-fixed-variant": "#2f2ebe",
+                        "on-tertiary-fixed": "#07006c",
+                        "surface-container-high": "#e6e8ea",
+                        "on-primary-fixed": "#111c2d",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#bcc7de",
+                        "surface-bright": "#f7f9fb",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#0d0093",
+                        "outline": "#75777d",
+                        "on-surface": "#191c1e",
+                        "on-primary-fixed-variant": "#3c475a",
+                        "on-primary-container": "#8590a6",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#bcc7de",
+                        "inverse-surface": "#2d3133",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "gutter": "16px",
+                        "xs": "8px",
+                        "sm": "12px",
+                        "md": "16px",
+                        "container-margin": "24px",
+                        "base": "4px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "data-mono": ["JetBrains Mono"],
+                        "label-caps": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased">
+<!-- SideNavBar (Shared Component) -->
+<aside class="w-[280px] h-screen fixed left-0 top-0 border-r border-outline-variant bg-surface flex flex-col p-md z-50">
+<div class="mb-xl px-sm">
+<h1 class="text-headline-md font-headline-md font-bold text-primary">DukanMitra</h1>
+<p class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-widest mt-1">AI Business Suite</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">dashboard</span>
+<span class="font-body-md">Overview</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">point_of_sale</span>
+<span class="font-body-md">Sales Agent</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">payments</span>
+<span class="font-body-md">Recovery Agent</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-secondary font-bold bg-secondary-container rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">inventory_2</span>
+<span class="font-body-md">Inventory Agent</span>
+</a>
+</nav>
+<div class="mt-auto pt-lg space-y-md border-t border-outline-variant">
+<div class="glass-ai rounded-xl p-md flex items-center gap-sm">
+<div class="w-2 h-2 rounded-full bg-secondary pulse-teal"></div>
+<p class="text-label-caps font-label-caps text-on-secondary-fixed-variant shimmer">AI ACTIVE</p>
+</div>
+<button class="w-full bg-gradient-to-r from-secondary to-tertiary text-white font-body-md py-md rounded-xl flex items-center justify-center gap-xs hover:opacity-90 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+                Ask AI
+            </button>
+<div class="flex items-center gap-md px-sm">
+<img alt="Profile" class="w-10 h-10 rounded-full border-2 border-white shadow-sm" data-alt="A professional headshot of a business executive in a modern, brightly lit office environment. The subject is wearing a clean charcoal suit, looking confident and approachable. The lighting is soft and corporate, matching a clean light-mode interface with subtle teal and navy accents in the background. High-end professional photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqbqL-1KFWZtbjk8_QL0pIKF5JykKoPu5PNWSU3Ivqn8kCSWIKQtESnlMneBmd6hH9Hk4_-LmfwZ0osRxLjgEegy2bGG1tQXd9xK1avgOHp8kYkCzvjCJSlYqxVQO5P7oivCVdlWRsCJarA02cXwSTFLYyIbaqqJVdCPpluEZgouAc_5p56p7zP17ChhC4PB9C1teaAl94ioPnHDSo3uz58kiLgUNcmOyc8db1n_dQNGS6efLRpvVJLtzP-C7BvGw9-pGoHf4Sh88"/>
+<div>
+<p class="font-headline-md text-[14px]">Admin Store</p>
+<p class="text-label-caps font-label-caps text-on-surface-variant text-[10px]">PREMIUM PLAN</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar (Shared Component) -->
+<header class="fixed top-0 right-0 left-[280px] z-40 bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center h-16 px-lg">
+<div class="flex items-center bg-surface-container-low rounded-full px-md py-xs w-96">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-full" placeholder="Search inventory, trends, or history..." type="text"/>
+</div>
+<div class="flex items-center gap-md">
+<button class="hover:bg-surface-container-low rounded-full p-xs relative transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="hover:bg-surface-container-low rounded-full p-xs transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">smart_toy</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant"></div>
+<button class="hover:bg-surface-container-low rounded-full p-xs transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[280px] mt-16 p-lg space-y-lg">
+<!-- Inventory KPIs - Bento Style -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-lg">
+<div class="bg-surface-container-lowest p-md rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+<p class="text-label-caps font-label-caps text-on-surface-variant mb-xs">TOTAL ITEMS</p>
+<div class="flex items-end justify-between">
+<h2 class="text-headline-lg font-headline-lg">1,248</h2>
+<span class="text-secondary text-label-caps font-label-caps bg-secondary-container px-xs rounded-full">+4%</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-md rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+<p class="text-label-caps font-label-caps text-error mb-xs">LOW STOCK ALERTS</p>
+<div class="flex items-end justify-between">
+<h2 class="text-headline-lg font-headline-lg">14</h2>
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-md rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+<p class="text-label-caps font-label-caps text-on-surface-variant mb-xs">SLOW MOVING ITEMS</p>
+<div class="flex items-end justify-between">
+<h2 class="text-headline-lg font-headline-lg">28</h2>
+<span class="text-outline text-label-caps font-label-caps bg-surface-container px-xs rounded-full">ACTION REQ</span>
+</div>
+</div>
+<div class="glass-ai p-md rounded-xl shadow-sm hover:shadow-md transition-all">
+<p class="text-label-caps font-label-caps text-secondary mb-xs">PREDICTED STOCKOUTS</p>
+<div class="flex items-end justify-between">
+<h2 class="text-headline-lg font-headline-lg text-primary">07</h2>
+<span class="text-label-caps font-label-caps text-on-secondary-fixed-variant">NEXT 7 DAYS</span>
+</div>
+</div>
+</div>
+<!-- Middle Row: Stock Visualization & Demand Forecasting -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<!-- Stock Level Visualization -->
+<div class="lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg">
+<div class="flex justify-between items-center mb-lg">
+<h3 class="text-headline-md font-headline-md">Stock Level Pulse</h3>
+<div class="flex gap-sm">
+<button class="px-sm py-base text-label-caps font-label-caps border border-outline-variant rounded hover:bg-surface-container transition-colors">EXPORT</button>
+<button class="px-sm py-base text-label-caps font-label-caps bg-primary text-white rounded hover:opacity-90 transition-opacity">MANAGE ALL</button>
+</div>
+</div>
+<div class="space-y-md">
+<!-- Product Rows -->
+<div class="grid grid-cols-12 items-center gap-md pb-md border-b border-outline-variant/30">
+<div class="col-span-4">
+<p class="font-body-md font-bold">Wireless Headphones Pro</p>
+<p class="text-body-sm text-on-surface-variant">Electronics / Audio</p>
+</div>
+<div class="col-span-5 flex flex-col gap-1">
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full" style="width: 82%"></div>
+</div>
+<div class="flex justify-between">
+<span class="text-label-caps font-label-caps text-secondary">82% STOCK</span>
+<span class="text-label-caps font-label-caps text-on-surface-variant">245 / 300</span>
+</div>
+</div>
+<div class="col-span-3 text-right">
+<p class="text-label-caps font-label-caps text-on-surface-variant">COVERAGE</p>
+<p class="text-headline-md font-headline-md text-primary">18 <span class="text-body-sm font-normal">DAYS</span></p>
+</div>
+</div>
+<div class="grid grid-cols-12 items-center gap-md pb-md border-b border-outline-variant/30">
+<div class="col-span-4">
+<p class="font-body-md font-bold text-error">Organic Almond Milk</p>
+<p class="text-body-sm text-on-surface-variant">Groceries / Health</p>
+</div>
+<div class="col-span-5 flex flex-col gap-1">
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-error h-full" style="width: 12%"></div>
+</div>
+<div class="flex justify-between">
+<span class="text-label-caps font-label-caps text-error">CRITICAL (12%)</span>
+<span class="text-label-caps font-label-caps text-on-surface-variant">14 / 120</span>
+</div>
+</div>
+<div class="col-span-3 text-right">
+<p class="text-label-caps font-label-caps text-error">COVERAGE</p>
+<p class="text-headline-md font-headline-md text-error">2 <span class="text-body-sm font-normal">DAYS</span></p>
+</div>
+</div>
+<div class="grid grid-cols-12 items-center gap-md pb-md">
+<div class="col-span-4">
+<p class="font-body-md font-bold">Smart Watch Series 5</p>
+<p class="text-body-sm text-on-surface-variant">Wearables</p>
+</div>
+<div class="col-span-5 flex flex-col gap-1">
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full" style="width: 45%"></div>
+</div>
+<div class="flex justify-between">
+<span class="text-label-caps font-label-caps text-on-surface-variant">HEALTHY (45%)</span>
+<span class="text-label-caps font-label-caps text-on-surface-variant">32 / 70</span>
+</div>
+</div>
+<div class="col-span-3 text-right">
+<p class="text-label-caps font-label-caps text-on-surface-variant">COVERAGE</p>
+<p class="text-headline-md font-headline-md text-primary">11 <span class="text-body-sm font-normal">DAYS</span></p>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Demand Forecasting Module -->
+<div class="glass-ai rounded-xl p-lg flex flex-col">
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<h3 class="text-headline-md font-headline-md">AI Demand Forecast</h3>
+</div>
+<div class="flex-1 space-y-lg">
+<!-- Chart Placeholder -->
+<div class="h-40 flex items-end justify-between px-md gap-sm border-b border-secondary/20 pb-1">
+<div class="w-8 bg-primary/20 h-[40%] rounded-t-sm" title="Actual"></div>
+<div class="w-8 bg-secondary h-[55%] rounded-t-sm shadow-lg shadow-secondary/20" title="Predicted"></div>
+<div class="w-8 bg-primary/20 h-[30%] rounded-t-sm"></div>
+<div class="w-8 bg-secondary h-[45%] rounded-t-sm shadow-lg shadow-secondary/20"></div>
+<div class="w-8 bg-primary/20 h-[60%] rounded-t-sm"></div>
+<div class="w-8 bg-secondary h-[85%] rounded-t-sm shadow-lg shadow-secondary/20"></div>
+</div>
+<div class="flex justify-between text-label-caps font-label-caps text-on-surface-variant px-sm">
+<span>WK 14</span>
+<span>WK 15</span>
+<span>WK 16 (Forecast)</span>
+</div>
+<div class="bg-white/40 p-md rounded-lg border border-secondary/10">
+<p class="text-data-mono font-data-mono text-[13px] text-on-secondary-fixed-variant leading-relaxed">
+<span class="text-secondary font-bold">Insight:</span> Velocity for "Cold Beverages" is trending +12% week-on-week. AI recommends increasing safety stock for weekend peaks.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Row: Recommendations & Activity Log -->
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-lg">
+<!-- Reorder Recommendations -->
+<div class="lg:col-span-3 bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden">
+<div class="p-lg border-b border-outline-variant flex justify-between items-center bg-surface-container-low/30">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">shopping_cart_checkout</span>
+<h3 class="text-headline-md font-headline-md">Reorder Recommendations</h3>
+</div>
+<button class="bg-secondary text-white px-md py-sm rounded-lg font-body-md hover:bg-on-secondary-fixed-variant transition-colors">Approve All</button>
+</div>
+<div class="p-lg">
+<table class="w-full text-left">
+<thead>
+<tr class="text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant">
+<th class="pb-md">ITEM</th>
+<th class="pb-md">SUGGESTED</th>
+<th class="pb-md">REASONING</th>
+<th class="pb-md">ACTION</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<tr>
+<td class="py-md">
+<p class="font-bold">Organic Almond Milk</p>
+<p class="text-body-sm text-on-surface-variant">Pack of 12</p>
+</td>
+<td class="py-md">
+<p class="text-headline-md font-headline-md text-secondary">40 <span class="text-body-sm font-normal">units</span></p>
+</td>
+<td class="py-md">
+<span class="text-body-sm bg-secondary-container/50 px-sm py-1 rounded-full text-on-secondary-fixed-variant">Predicted spike: Weekend Sale</span>
+</td>
+<td class="py-md">
+<button class="material-symbols-outlined text-outline hover:text-secondary transition-colors">add_circle</button>
+</td>
+</tr>
+<tr>
+<td class="py-md">
+<p class="font-bold">AA Battery Pack</p>
+<p class="text-body-sm text-on-surface-variant">Essentials</p>
+</td>
+<td class="py-md">
+<p class="text-headline-md font-headline-md text-secondary">100 <span class="text-body-sm font-normal">units</span></p>
+</td>
+<td class="py-md">
+<span class="text-body-sm bg-surface-container px-sm py-1 rounded-full text-on-surface-variant">Historical Low Stock threshold</span>
+</td>
+<td class="py-md">
+<button class="material-symbols-outlined text-outline hover:text-secondary transition-colors">add_circle</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Recent Stock Activity Log -->
+<div class="lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg">
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-on-surface-variant">history</span>
+<h3 class="text-headline-md font-headline-md">Stock Activity</h3>
+</div>
+<div class="space-y-md">
+<div class="flex gap-md">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-error-container text-error flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</div>
+<div class="w-0.5 h-full bg-outline-variant/30 my-1"></div>
+</div>
+<div class="pb-md">
+<p class="font-bold">Sales Deduction</p>
+<p class="text-body-sm text-on-surface-variant">-12 Wireless Headphones Pro</p>
+<p class="text-label-caps font-label-caps text-outline mt-1">10:45 AM • POS-421</p>
+</div>
+</div>
+<div class="flex gap-md">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</div>
+<div class="w-0.5 h-full bg-outline-variant/30 my-1"></div>
+</div>
+<div class="pb-md">
+<p class="font-bold">Purchase Order Recieved</p>
+<p class="text-body-sm text-on-surface-variant">+50 Smart Watch Series 5</p>
+<p class="text-label-caps font-label-caps text-outline mt-1">09:12 AM • Supplier: GizmoCorp</p>
+</div>
+</div>
+<div class="flex gap-md">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">inventory</span>
+</div>
+</div>
+<div>
+<p class="font-bold">Manual Audit</p>
+<p class="text-body-sm text-on-surface-variant">Stock adjustment: Dry Fruits (-2kg)</p>
+<p class="text-label-caps font-label-caps text-outline mt-1">Yesterday • User: Karan S.</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-lg text-secondary text-label-caps font-label-caps hover:underline">VIEW FULL LEDGER</button>
+</div>
+</div>
+</main>
+<!-- Contextual FAB - AI Intelligence -->
+<button class="fixed bottom-lg right-lg w-14 h-14 bg-gradient-to-br from-secondary to-tertiary text-white rounded-full shadow-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all group">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="absolute right-16 bg-primary text-white text-body-sm px-md py-xs rounded-lg opacity-0 group-hover:opacity-100 whitespace-nowrap transition-opacity pointer-events-none">Optimize Stock Now</span>
+</button>
+<script>
+        // Micro-interactions and Shimmer Effects
+        document.querySelectorAll('.hover\\:shadow-md').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-2px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Search Bar Focus Effect
+        const searchInput = document.querySelector('input[type="text"]');
+        const searchContainer = searchInput.parentElement;
+        searchInput.addEventListener('focus', () => {
+            searchContainer.classList.add('ring-2', 'ring-secondary/20', 'bg-white');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchContainer.classList.remove('ring-2', 'ring-secondary/20', 'bg-white');
+        });
+    </script>
+</body></html>
