@@ -144,6 +144,9 @@ export default function Home() {
   const [selectedChat, setSelectedChat] = useState<Conversation | null>(null);
   const [chatOverrideText, setChatOverrideText] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSimulateCustomer, setIsSimulateCustomer] = useState(false);
+  const [simulateText, setSimulateText] = useState("");
+  const [simulateSending, setSimulateSending] = useState(false);
 
   // Demo Step Player
   const [demoStep, setDemoStep] = useState(0);
@@ -228,6 +231,14 @@ export default function Home() {
 
   useEffect(() => {
     refreshData();
+    // Auto-poll every 5 seconds when tab is visible
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        refreshData();
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Update open WhatsApp Inspector modal in real-time when conversations state refreshes
@@ -438,6 +449,29 @@ export default function Home() {
       setChatOverrideText("");
       setSelectedChat(null);
       await refreshData();
+    }
+  };
+
+  const handleSimulateCustomerMessage = async (chatId: string) => {
+    const msg = simulateText.trim();
+    if (!msg || simulateSending) return;
+    setSimulateSending(true);
+    try {
+      await fetch("/api/conversations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversationId: chatId,
+          sender: "customer",
+          text: msg,
+        }),
+      });
+      setSimulateText("");
+      await refreshData();
+    } catch (e) {
+      console.error("Failed to simulate customer message", e);
+    } finally {
+      setSimulateSending(false);
     }
   };
 
@@ -1742,75 +1776,151 @@ export default function Home() {
             </div>
 
             {/* Approvals/Inputs Footer */}
-            <div className="p-lg border-t border-outline-variant bg-white space-y-md">
-              {selectedChat.messages.length > 0 && selectedChat.messages[selectedChat.messages.length - 1].text.includes("(Draft)") ? (
-                <div className="space-y-sm">
-                  <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold text-tertiary uppercase tracking-wider flex items-center gap-xs">
-                      <span className="material-symbols-outlined text-[14px]">edit_note</span>
-                      Approve or Override AI Draft Response
-                    </label>
-                    <span className="text-[10px] text-on-surface-variant font-semibold">
-                      Pressing Send will deliver this message on WhatsApp
-                    </span>
-                  </div>
-                  
-                  <textarea 
-                    rows={2} 
-                    value={chatOverrideText}
-                    onChange={(e) => setChatOverrideText(e.target.value)}
-                    className="w-full border border-outline-variant focus:border-tertiary focus:ring-1 focus:ring-tertiary rounded-lg p-md text-sm bg-white text-on-background"
-                  />
+            <div className="border-t border-outline-variant bg-white">
+              {/* Mode Toggle Tabs */}
+              <div className="flex border-b border-outline-variant">
+                <button
+                  onClick={() => setIsSimulateCustomer(false)}
+                  className={`flex-1 py-sm text-xs font-bold flex items-center justify-center gap-xs transition-colors ${
+                    !isSimulateCustomer
+                      ? "text-secondary border-b-2 border-secondary bg-secondary-container/20"
+                      : "text-on-surface-variant hover:bg-surface-container"
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[14px]">manage_accounts</span>
+                  Owner Mode
+                </button>
+                <button
+                  onClick={() => setIsSimulateCustomer(true)}
+                  className={`flex-1 py-sm text-xs font-bold flex items-center justify-center gap-xs transition-colors ${
+                    isSimulateCustomer
+                      ? "text-tertiary border-b-2 border-tertiary bg-tertiary-fixed/20"
+                      : "text-on-surface-variant hover:bg-surface-container"
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[14px]">person_play</span>
+                  Simulate Customer
+                </button>
+              </div>
 
-                  <div className="flex justify-end gap-md pt-1">
-                    <button
-                      onClick={() => {
-                        // Reject draft
-                        setConversations(prev => 
-                          prev.map(c => {
-                            if (c.id === selectedChat.id) {
-                              return {
-                                ...c,
-                                messages: c.messages.slice(0, c.messages.length - 1),
-                                lastMessage: c.messages[c.messages.length - 2]?.text || ""
-                              };
-                            }
-                            return c;
-                          })
-                        );
-                        setSelectedChat(null);
-                      }}
-                      className="px-4 py-2 border border-error text-error hover:bg-error-container/20 rounded-lg text-sm font-semibold transition-all"
-                    >
-                      Reject Draft
-                    </button>
-                    <button
-                      onClick={() => handleSendDraft(selectedChat.id)}
-                      className="px-4 py-2 bg-secondary hover:bg-secondary-container hover:text-on-secondary-container text-white rounded-lg text-sm font-semibold transition-all shadow-md flex items-center gap-xs"
-                    >
-                      <span className="material-symbols-outlined text-sm">send</span>
-                      Approve and Send
-                    </button>
+              <div className="p-lg space-y-md">
+                {isSimulateCustomer ? (
+                  /* SIMULATE CUSTOMER MODE */
+                  <div className="space-y-sm">
+                    <div className="flex items-center gap-xs text-xs font-bold text-tertiary uppercase tracking-wider">
+                      <span className="material-symbols-outlined text-[14px]">person_play</span>
+                      Send message as customer — AI Agent will auto-reply
+                    </div>
+                    <div className="flex gap-sm items-center">
+                      <input
+                        type="text"
+                        placeholder='e.g. "I need 20 office chairs" or "When is my payment due?"'
+                        value={simulateText}
+                        onChange={(e) => setSimulateText(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
+                            handleSimulateCustomerMessage(selectedChat.id);
+                          }
+                        }}
+                        className="flex-grow border border-outline-variant rounded-lg px-md py-sm text-sm focus:outline-none focus:ring-1 focus:ring-tertiary bg-white text-on-background"
+                      />
+                      <button
+                        onClick={() => handleSimulateCustomerMessage(selectedChat.id)}
+                        disabled={simulateSending || !simulateText.trim()}
+                        className="px-md py-sm bg-tertiary hover:opacity-90 disabled:opacity-50 text-white rounded-lg text-sm font-semibold transition-all flex items-center gap-xs shadow-md"
+                      >
+                        {simulateSending ? (
+                          <span className="material-symbols-outlined text-sm animate-spin">sync</span>
+                        ) : (
+                          <span className="material-symbols-outlined text-sm">send</span>
+                        )}
+                        {simulateSending ? "Sending..." : "Send"}
+                      </button>
+                    </div>
+                    {simulateSending && (
+                      <div className="flex items-center gap-xs text-[10px] text-on-surface-variant font-semibold animate-pulse">
+                        <span className="w-1.5 h-1.5 bg-tertiary rounded-full"></span>
+                        AI Agent is analyzing and drafting a reply...
+                      </div>
+                    )}
+                    <p className="text-[10px] text-on-surface-variant">
+                      The AI orchestrator will route your message to the Sales Agent or Recovery Agent based on the content, then generate a draft reply for your approval.
+                    </p>
                   </div>
-                </div>
-              ) : (
-                <div className="flex gap-md items-center">
-                  <input 
-                    type="text" 
-                    placeholder="Type a message to manually take over the chat..." 
-                    value={chatOverrideText}
-                    onChange={(e) => setChatOverrideText(e.target.value)}
-                    className="flex-grow border border-outline-variant rounded-lg px-md py-sm text-sm focus:outline-none focus:ring-1 focus:ring-secondary bg-white text-on-background"
-                  />
-                  <button 
-                    onClick={() => handleSendDraft(selectedChat.id)}
-                    className="px-md py-sm bg-primary hover:bg-secondary text-white rounded-lg text-sm font-semibold transition-all flex items-center justify-center"
-                  >
-                    Send
-                  </button>
-                </div>
-              )}
+                ) : (
+                  /* OWNER MODE — approve/override or manual takeover */
+                  selectedChat.messages.length > 0 && selectedChat.messages[selectedChat.messages.length - 1].text.includes("(Draft)") ? (
+                    <div className="space-y-sm">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-bold text-tertiary uppercase tracking-wider flex items-center gap-xs">
+                          <span className="material-symbols-outlined text-[14px]">edit_note</span>
+                          Approve or Override AI Draft Response
+                        </label>
+                        <span className="text-[10px] text-on-surface-variant font-semibold">
+                          Pressing Send will deliver this message on WhatsApp
+                        </span>
+                      </div>
+                      
+                      <textarea
+                        rows={2}
+                        value={chatOverrideText}
+                        onChange={(e) => setChatOverrideText(e.target.value)}
+                        className="w-full border border-outline-variant focus:border-tertiary focus:ring-1 focus:ring-tertiary rounded-lg p-md text-sm bg-white text-on-background"
+                      />
+
+                      <div className="flex justify-end gap-md pt-1">
+                        <button
+                          onClick={() => {
+                            // Reject draft
+                            setConversations(prev =>
+                              prev.map(c => {
+                                if (c.id === selectedChat.id) {
+                                  return {
+                                    ...c,
+                                    messages: c.messages.slice(0, c.messages.length - 1),
+                                    lastMessage: c.messages[c.messages.length - 2]?.text || ""
+                                  };
+                                }
+                                return c;
+                              })
+                            );
+                            setSelectedChat(null);
+                          }}
+                          className="px-4 py-2 border border-error text-error hover:bg-error-container/20 rounded-lg text-sm font-semibold transition-all"
+                        >
+                          Reject Draft
+                        </button>
+                        <button
+                          onClick={() => handleSendDraft(selectedChat.id)}
+                          className="px-4 py-2 bg-secondary hover:bg-secondary-container hover:text-on-secondary-container text-white rounded-lg text-sm font-semibold transition-all shadow-md flex items-center gap-xs"
+                        >
+                          <span className="material-symbols-outlined text-sm">send</span>
+                          Approve and Send
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex gap-md items-center">
+                      <input
+                        type="text"
+                        placeholder="Type a message to manually take over the chat..."
+                        value={chatOverrideText}
+                        onChange={(e) => setChatOverrideText(e.target.value)}
+                        className="flex-grow border border-outline-variant rounded-lg px-md py-sm text-sm focus:outline-none focus:ring-1 focus:ring-secondary bg-white text-on-background"
+                      />
+                      <button
+                        onClick={() => handleSendDraft(selectedChat.id)}
+                        className="px-md py-sm bg-primary hover:bg-secondary text-white rounded-lg text-sm font-semibold transition-all flex items-center justify-center"
+                      >
+                        Send
+                      </button>
+                    </div>
+                  )
+                )}
+              </div>
             </div>
+
           </div>
         </div>
       )}
