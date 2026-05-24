@@ -154,10 +154,19 @@ export default function Home() {
   const [invoices, setInvoices] = useState<RecoveryInvoice[]>([]);
   const [products, setProducts] = useState<StockPulseRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<{ name: string; role: string } | null>(null);
 
   // Load and refresh function
   const refreshData = async () => {
     try {
+      const resMe = await fetch("/api/auth/me");
+      if (!resMe.ok) {
+        window.location.href = "/login";
+        return;
+      }
+      const dataMe = await resMe.json();
+      setCurrentUser(dataMe.user);
+
       const [resConv, resFeed, resInv, resProd] = await Promise.all([
         fetch("/api/conversations"),
         fetch("/api/feed"),
@@ -204,6 +213,16 @@ export default function Home() {
       console.error("Failed to fetch database items", e);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch (e) {
+      console.error("Failed to sign out", e);
+    } finally {
+      window.location.href = "/login";
     }
   };
 
@@ -534,16 +553,25 @@ export default function Home() {
             Ask AI
           </button>
 
-          <div className="flex items-center gap-md px-sm">
-            <img 
-              alt="Admin Store Profile" 
-              className="w-10 h-10 rounded-full border border-outline-variant shadow-sm"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqbqL-1KFWZtbjk8_QL0pIKF5JykKoPu5PNWSU3Ivqn8kCSWIKQtESnlMneBmd6hH9Hk4_-LmfwZ0osRxLjgEegy2bGG1tQXd9xK1avgOHp8kYkCzvjCJSlYqxVQO5P7oivCVdlWRsCJarA02cXwSTFLYyIbaqqJVdCPpluEZgouAc_5p56p7zP17ChhC4PB9C1teaAl94ioPnHDSo3uz58kiLgUNcmOyc8db1n_dQNGS6efLRpvVJLtzP-C7BvGw9-pGoHf4Sh88"
-            />
-            <div>
-              <p className="font-bold text-sm text-primary">Admin Store</p>
-              <p className="text-label-caps font-label-caps text-[10px] text-on-surface-variant font-bold">PREMIUM PLAN</p>
+          <div className="flex items-center justify-between gap-xs px-sm w-full">
+            <div className="flex items-center gap-md">
+              <img 
+                alt="Admin Store Profile" 
+                className="w-10 h-10 rounded-full border border-outline-variant shadow-sm animate-pulse"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqbqL-1KFWZtbjk8_QL0pIKF5JykKoPu5PNWSU3Ivqn8kCSWIKQtESnlMneBmd6hH9Hk4_-LmfwZ0osRxLjgEegy2bGG1tQXd9xK1avgOHp8kYkCzvjCJSlYqxVQO5P7oivCVdlWRsCJarA02cXwSTFLYyIbaqqJVdCPpluEZgouAc_5p56p7zP17ChhC4PB9C1teaAl94ioPnHDSo3uz58kiLgUNcmOyc8db1n_dQNGS6efLRpvVJLtzP-C7BvGw9-pGoHf4Sh88"
+              />
+              <div>
+                <p className="font-bold text-sm text-primary truncate max-w-[120px]">{currentUser?.name || "Admin Store"}</p>
+                <p className="text-label-caps font-label-caps text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">{currentUser?.role || "Owner"}</p>
+              </div>
             </div>
+            <button 
+              onClick={handleLogout}
+              className="p-sm text-slate-500 hover:text-error hover:bg-error/10 rounded-full transition-colors flex items-center justify-center cursor-pointer"
+              title="Sign Out"
+            >
+              <span className="material-symbols-outlined text-lg">logout</span>
+            </button>
           </div>
         </div>
       </aside>
