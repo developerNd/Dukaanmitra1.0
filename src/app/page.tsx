@@ -1481,7 +1481,7 @@ export default function Home() {
       {/* AI Command Modal */}
       {commandOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-md bg-black/50 backdrop-blur-sm transition-opacity">
-          <div className="bg-white border border-outline-variant rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden transform transition-all scale-100 flex flex-col">
+          <div className="bg-white border border-outline-variant rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
             <div className="px-lg py-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
               <div className="flex items-center gap-sm">
                 <span className="material-symbols-outlined text-secondary">auto_awesome</span>
@@ -1557,7 +1557,7 @@ export default function Home() {
       {/* WhatsApp Chat Inspector Modal */}
       {selectedChat && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-md bg-black/50 backdrop-blur-sm transition-opacity">
-          <div className="bg-white border border-outline-variant rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden transform transition-all scale-100 flex flex-col h-[80vh]">
+          <div className="bg-white border border-outline-variant rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col h-[80vh]">
             
             {/* Header */}
             <div className="px-lg py-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
