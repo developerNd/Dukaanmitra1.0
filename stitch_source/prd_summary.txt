@@ -1,0 +1,21 @@
+# DukanMitra — AI Employees for SMEs
+Product Requirements Document · v1.0 · Hackathon Edition
+One-line pitch: "DukanMitra provides AI employees for SMEs that autonomously manage sales, payments, and inventory through WhatsApp."
+
+## Core Product Goals
+- Reduce manual operational workload for SMEs
+- Improve customer response speed (target: < 3s)
+- Increase payment recovery rate
+- Prevent inventory stockouts
+- 24/7 autonomous business assistance
+
+## AI Agents
+- **AI Sales Employee**: Customer NLU, product recommendations, quotes, orders, payment links.
+- **AI Recovery Employee**: Payment monitoring, tiered reminders (friendly → firm → urgent), owner notifications.
+- **AI Inventory Employee**: Stock tracking, demand prediction, reorder recommendations.
+
+## Dashboard Modules
+- **Overview**: KPIs (Sales, Pending Invoices, Stock Alerts), AI actions, live conversations.
+- **Sales**: Orders, quotes, conversion rates, customer logs.
+- **Recovery**: Overdue buckets, reminder history, recovery rates.
+- **Inventory**: Stock levels, demand forecasting, reorder suggestions.

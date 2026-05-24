@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DukanMitra | AI Recovery Agent Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Hanken+Grotesk:wght@600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed": "#d8e3fb",
+                      "on-secondary": "#ffffff",
+                      "background": "#f7f9fb",
+                      "tertiary-fixed-dim": "#c0c1ff",
+                      "surface": "#f7f9fb",
+                      "tertiary-fixed": "#e1e0ff",
+                      "secondary": "#006a61",
+                      "on-surface-variant": "#45474c",
+                      "on-secondary-container": "#006f66",
+                      "surface-container-low": "#f2f4f6",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-on-surface": "#eff1f3",
+                      "secondary-fixed-dim": "#6bd8cb",
+                      "on-error-container": "#93000a",
+                      "surface-variant": "#e0e3e5",
+                      "on-secondary-fixed": "#00201d",
+                      "secondary-container": "#86f2e4",
+                      "secondary-fixed": "#89f5e7",
+                      "surface-container-highest": "#e0e3e5",
+                      "tertiary": "#040057",
+                      "on-background": "#191c1e",
+                      "primary": "#091426",
+                      "outline-variant": "#c5c6cd",
+                      "on-tertiary-container": "#7f82ff",
+                      "surface-container": "#eceef0",
+                      "surface-dim": "#d8dadc",
+                      "on-secondary-fixed-variant": "#005049",
+                      "surface-tint": "#545f73",
+                      "primary-container": "#1e293b",
+                      "on-tertiary-fixed-variant": "#2f2ebe",
+                      "on-tertiary-fixed": "#07006c",
+                      "surface-container-high": "#e6e8ea",
+                      "on-primary-fixed": "#111c2d",
+                      "on-primary": "#ffffff",
+                      "inverse-primary": "#bcc7de",
+                      "surface-bright": "#f7f9fb",
+                      "error": "#ba1a1a",
+                      "tertiary-container": "#0d0093",
+                      "outline": "#75777d",
+                      "on-surface": "#191c1e",
+                      "on-primary-fixed-variant": "#3c475a",
+                      "on-primary-container": "#8590a6",
+                      "on-tertiary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "primary-fixed-dim": "#bcc7de",
+                      "inverse-surface": "#2d3133",
+                      "error-container": "#ffdad6"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xl": "32px",
+                      "gutter": "16px",
+                      "xs": "8px",
+                      "sm": "12px",
+                      "md": "16px",
+                      "container-margin": "24px",
+                      "base": "4px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "data-mono": ["JetBrains Mono"],
+                      "label-caps": ["JetBrains Mono"],
+                      "body-sm": ["Inter"],
+                      "headline-lg-mobile": ["Hanken Grotesk"],
+                      "body-lg": ["Inter"],
+                      "display-lg": ["Hanken Grotesk"],
+                      "headline-md": ["Hanken Grotesk"],
+                      "headline-lg": ["Hanken Grotesk"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .glass-ai {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 106, 97, 0.2);
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(0, 106, 97, 0.1), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .pulse-teal {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- SideNavBar -->
+<aside class="w-[280px] h-screen fixed left-0 top-0 bg-surface border-r border-outline-variant flex flex-col p-md z-50">
+<div class="flex items-center gap-sm mb-xl">
+<div class="w-10 h-10 bg-primary flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+<div>
+<h1 class="text-headline-md font-headline-md font-bold text-primary">DukanMitra</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant">AI Business Suite</p>
+</div>
+</div>
+<nav class="flex-1 space-y-base">
+<a class="flex items-center gap-sm p-sm text-on-surface-variant hover:bg-surface-container transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Overview</span>
+</a>
+<a class="flex items-center gap-sm p-sm text-on-surface-variant hover:bg-surface-container transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="font-body-md">Sales Agent</span>
+</a>
+<a class="flex items-center gap-sm p-sm text-secondary font-bold bg-secondary-container rounded-lg group" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-body-md">Recovery Agent</span>
+</a>
+<a class="flex items-center gap-sm p-sm text-on-surface-variant hover:bg-surface-container transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body-md">Inventory Agent</span>
+</a>
+</nav>
+<div class="mt-auto pt-md border-t border-outline-variant">
+<button class="w-full flex items-center justify-center gap-xs py-sm px-md bg-gradient-to-r from-secondary to-tertiary-container text-white rounded-xl font-bold transition-transform active:scale-95 shadow-lg">
+<span class="material-symbols-outlined text-[18px]">smart_toy</span>
+<span>Ask AI</span>
+</button>
+<div class="flex items-center gap-sm mt-md p-xs">
+<img alt="Business Profile" class="w-8 h-8 rounded-full border border-outline" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgeKrnc90sTJAXINPIiFE_jgJydd8s_w6Gasdb2aX1YGVvFTIftyisoiJA4ojV4hMum17JiMp0a2fv4EHgreRlmuVpBgEodeB_CA7lD878CSTN_ekSFWTwV5ygd4LDnrKHUoFuJia0MHIIGhYPOEm7vzU28aZcOV77dCshIeDOpsYiy5kOdN-wHWgSO4Id8vLThiwpI6hsoKltcUsqW5yfQDAY-XBX2wZHAnkzkQFI54ZSWtWRE45iuAOlpSEy1mQVUL8-04fEiVU"/>
+<div class="overflow-hidden">
+<p class="font-body-sm font-bold truncate">Modern Retail Inc.</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest">Premium Tier</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-[280px] h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant z-40 flex justify-between items-center px-lg">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 focus:ring-2 focus:ring-secondary/20 transition-all text-body-sm" placeholder="Search invoices, customers, or actions..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-xs px-sm py-1 bg-secondary/10 rounded-full">
+<div class="w-2 h-2 bg-secondary rounded-full pulse-teal"></div>
+<span class="text-body-sm font-data-mono text-secondary shimmer">RECOVERY_AGENT: ACTIVE</span>
+</div>
+<button class="hover:bg-surface-container-low rounded-full p-xs text-on-surface-variant transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="hover:bg-surface-container-low rounded-full p-xs text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">smart_toy</span>
+</button>
+<button class="hover:bg-surface-container-low rounded-full p-xs text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-[280px] pt-16 p-lg">
+<!-- Dashboard Header -->
+<div class="mb-lg flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Recovery Dashboard</h2>
+<p class="text-on-surface-variant font-body-md">AI-Driven collections and automated receivables management.</p>
+</div>
+<div class="flex gap-sm">
+<button class="flex items-center gap-xs px-md py-2 border border-outline text-on-surface rounded-lg hover:bg-white transition-all font-bold text-body-sm">
+<span class="material-symbols-outlined text-[18px]">download</span> Export Report
+                </button>
+<button class="flex items-center gap-xs px-md py-2 bg-primary text-white rounded-lg hover:opacity-90 transition-all font-bold text-body-sm">
+<span class="material-symbols-outlined text-[18px]">add</span> Create Invoice
+                </button>
+</div>
+</div>
+<!-- Bento Grid for KPIs and Aging -->
+<div class="grid grid-cols-12 gap-lg mb-lg">
+<!-- Recovery KPIs -->
+<div class="col-span-8 grid grid-cols-4 gap-md">
+<div class="bg-white p-md rounded-xl border border-outline-variant shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:border-secondary transition-colors cursor-default group">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-base">RECOVERY RATE</p>
+<div class="flex items-end gap-xs">
+<span class="font-headline-lg text-headline-lg text-primary">94.2%</span>
+<span class="text-secondary text-[12px] font-bold mb-1 flex items-center">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> 2.4%
+                        </span>
+</div>
+<div class="mt-md h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[94.2%]"></div>
+</div>
+</div>
+<div class="bg-white p-md rounded-xl border border-outline-variant shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:border-secondary transition-colors cursor-default">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-base">TOTAL OVERDUE</p>
+<div class="flex items-end gap-xs">
+<span class="font-headline-lg text-headline-lg text-primary">$12.4k</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mt-sm">24 pending invoices</p>
+</div>
+<div class="bg-white p-md rounded-xl border border-outline-variant shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:border-secondary transition-colors cursor-default">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-base">PAID VIA AI</p>
+<div class="flex items-end gap-xs">
+<span class="font-headline-lg text-headline-lg text-primary">158</span>
+</div>
+<p class="text-body-sm text-secondary mt-sm font-bold">85% total volume</p>
+</div>
+<div class="bg-white p-md rounded-xl border border-outline-variant shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:border-secondary transition-colors cursor-default">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-base">ACTIVE REMINDERS</p>
+<div class="flex items-end gap-xs">
+<span class="font-headline-lg text-headline-lg text-primary">42</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mt-sm">Next batch in 12m</p>
+</div>
+</div>
+<!-- Overdue Buckets -->
+<div class="col-span-4 glass-ai p-md rounded-xl shadow-lg border border-secondary/20">
+<div class="flex justify-between items-start mb-md">
+<h3 class="font-label-caps text-label-caps text-primary">AGING_BUCKETS_VISUAL</h3>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div class="space-y-md">
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<span class="font-bold">0-7 Days</span>
+<span class="font-data-mono">$5,240</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[42%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<span class="font-bold">7-30 Days</span>
+<span class="font-data-mono">$4,100</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-container w-[33%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<span class="font-bold">30+ Days</span>
+<span class="font-data-mono">$3,060</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-error w-[25%]"></div>
+</div>
+</div>
+</div>
+<p class="mt-md text-[11px] text-on-surface-variant font-data-mono text-center">AI Projected Recovery: 91% within 14 days</p>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-lg mb-lg">
+<!-- AI Reminder History Feed -->
+<div class="col-span-4 bg-white rounded-xl border border-outline-variant flex flex-col h-[500px]">
+<div class="p-md border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-label-caps text-label-caps text-primary">REMINDER_STREAM</h3>
+<button class="text-secondary text-body-sm font-bold hover:underline">View All</button>
+</div>
+<div class="flex-1 overflow-y-auto p-md space-y-md">
+<!-- History Item 1 -->
+<div class="flex gap-md group">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-secondary">mail</span>
+</div>
+<div class="w-[1px] h-full bg-outline-variant mt-xs"></div>
+</div>
+<div class="pb-md">
+<div class="flex items-center justify-between mb-1">
+<span class="font-bold text-body-sm">Global Trade Co.</span>
+<span class="text-[10px] text-on-surface-variant font-data-mono">2M AGO</span>
+</div>
+<div class="flex gap-xs mb-sm">
+<span class="px-xs py-0.5 bg-surface-container rounded text-[10px] font-bold text-on-surface-variant">TONE: FIRM</span>
+<span class="px-xs py-0.5 bg-secondary/10 rounded text-[10px] font-bold text-secondary">CHANNEL: WHATSAPP</span>
+</div>
+<p class="text-body-sm text-on-surface-variant line-clamp-2 italic">"Your payment for Invoice #2938 is now 10 days overdue. Please update..."</p>
+<div class="mt-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px] text-secondary">done_all</span>
+<span class="text-[11px] font-bold text-on-surface-variant">Read by customer</span>
+</div>
+</div>
+</div>
+<!-- History Item 2 -->
+<div class="flex gap-md group">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-error">priority_high</span>
+</div>
+<div class="w-[1px] h-full bg-outline-variant mt-xs"></div>
+</div>
+<div class="pb-md">
+<div class="flex items-center justify-between mb-1">
+<span class="font-bold text-body-sm">Zenith Solutions</span>
+<span class="text-[10px] text-on-surface-variant font-data-mono">1H AGO</span>
+</div>
+<div class="flex gap-xs mb-sm">
+<span class="px-xs py-0.5 bg-error/10 rounded text-[10px] font-bold text-error">TONE: URGENT</span>
+<span class="px-xs py-0.5 bg-surface-container rounded text-[10px] font-bold text-on-surface-variant">CHANNEL: EMAIL</span>
+</div>
+<p class="text-body-sm text-on-surface-variant italic">"This is a final notice regarding outstanding dues..."</p>
+<div class="mt-sm flex items-center gap-xs text-secondary">
+<span class="material-symbols-outlined text-[14px]">reply</span>
+<span class="text-[11px] font-bold">Replied: "Paying by Friday"</span>
+</div>
+</div>
+</div>
+<!-- History Item 3 -->
+<div class="flex gap-md group">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">send</span>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="font-bold text-body-sm">Alpha Retail</span>
+<span class="text-[10px] text-on-surface-variant font-data-mono">3H AGO</span>
+</div>
+<div class="flex gap-xs mb-sm">
+<span class="px-xs py-0.5 bg-surface-container-high rounded text-[10px] font-bold text-on-surface-variant">TONE: FRIENDLY</span>
+</div>
+<p class="text-body-sm text-on-surface-variant italic">"Hope you are having a great week! Just a friendly nudge..."</p>
+</div>
+</div>
+</div>
+</div>
+<!-- High-Risk Customers & Detailed Invoices -->
+<div class="col-span-8 space-y-lg">
+<!-- High-Risk Customers Section -->
+<div class="bg-white rounded-xl border border-outline-variant overflow-hidden">
+<div class="p-md bg-error/5 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-label-caps text-label-caps text-error flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">warning</span> HIGH_RISK_WATCHLIST
+                        </h3>
+<span class="text-[11px] font-data-mono text-on-surface-variant">6 CUSTOMERS FLAGGED</span>
+</div>
+<div class="divide-y divide-outline-variant">
+<div class="p-md flex items-center justify-between hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-error-container text-error flex items-center justify-center font-bold">VK</div>
+<div>
+<p class="font-bold text-body-md">Vortex Kitchens</p>
+<p class="text-body-sm text-on-surface-variant">3 overdue invoices • $2,450 total</p>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="text-right">
+<p class="font-data-mono text-body-sm font-bold text-error">RISK: CRITICAL</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">History: Constant Late Payer</p>
+</div>
+<button class="p-xs hover:bg-surface-container-highest rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
+</button>
+</div>
+</div>
+<div class="p-md flex items-center justify-between hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-bold">NS</div>
+<div>
+<p class="font-bold text-body-md">Nova Supply</p>
+<p class="text-body-sm text-on-surface-variant">1 overdue (45 days) • $890 total</p>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="text-right">
+<p class="font-data-mono text-body-sm font-bold text-tertiary-container">RISK: MEDIUM</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">History: First-time overdue</p>
+</div>
+<button class="p-xs hover:bg-surface-container-highest rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Invoice Management Table -->
+<div class="bg-white rounded-xl border border-outline-variant overflow-hidden">
+<div class="p-md border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-label-caps text-label-caps text-primary">ALL_INVOICES_LEDGER</h3>
+<div class="flex gap-sm">
+<button class="px-sm py-1 rounded border border-outline text-body-sm font-bold">Recent First</button>
+<button class="px-sm py-1 rounded border border-outline text-body-sm font-bold">Status: Overdue</button>
+</div>
+</div>
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="p-md font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider">Invoice ID</th>
+<th class="p-md font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider">Customer</th>
+<th class="p-md font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider">Amount</th>
+<th class="p-md font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider">Due Date</th>
+<th class="p-md font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider">AI Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="p-md font-data-mono text-body-sm text-primary">#INV-8821</td>
+<td class="p-md text-body-sm font-bold">Blue Ocean Logistics</td>
+<td class="p-md text-body-sm font-bold">$1,200.00</td>
+<td class="p-md text-body-sm text-error font-bold">Overdue (2d)</td>
+<td class="p-md">
+<div class="flex items-center gap-xs">
+<div class="w-1.5 h-1.5 rounded-full bg-secondary pulse-teal"></div>
+<span class="text-body-sm text-secondary font-bold">Sending nudge in 2h</span>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="p-md font-data-mono text-body-sm text-primary">#INV-8819</td>
+<td class="p-md text-body-sm font-bold">Crafted Comforts</td>
+<td class="p-md text-body-sm font-bold">$450.00</td>
+<td class="p-md text-body-sm text-on-surface-variant">Due Tomorrow</td>
+<td class="p-md">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">schedule</span>
+<span class="text-body-sm text-on-surface-variant">Auto-followup scheduled</span>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="p-md font-data-mono text-body-sm text-primary">#INV-8815</td>
+<td class="p-md text-body-sm font-bold">Starlight Events</td>
+<td class="p-md text-body-sm font-bold">$3,150.00</td>
+<td class="p-md text-body-sm text-secondary font-bold">Paid</td>
+<td class="p-md">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-body-sm text-secondary">AI Thank-you sent</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="p-md bg-surface-container-low flex justify-center">
+<button class="text-body-sm font-bold text-on-surface-variant hover:text-primary transition-colors">Load 20 More Records</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating AI Prompt (Contextual FAB) -->
+<button class="fixed bottom-lg right-lg w-14 h-14 bg-gradient-to-tr from-secondary to-tertiary-container text-white rounded-full flex items-center justify-center shadow-2xl transition-transform hover:scale-110 active:scale-95 group z-50">
+<span class="material-symbols-outlined text-[32px]">bolt</span>
+<div class="absolute right-full mr-md py-2 px-4 bg-primary text-white rounded-lg text-body-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+            Generate Recovery Report
+        </div>
+</button>
+<script>
+        // Simple micro-interaction for rows
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', () => {
+                row.classList.add('scale-[0.99]');
+                setTimeout(() => row.classList.remove('scale-[0.99]'), 100);
+            });
+        });
+    </script>
+</body></html>
