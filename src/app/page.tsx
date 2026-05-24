@@ -349,61 +349,77 @@ export default function Home() {
     if (nextStep > 8) return;
     setDemoStep(nextStep);
 
-    await fetch("/api/demo/step", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ step: nextStep }),
-    });
-
-    await refreshData();
+    try {
+      await fetch("/api/demo/step", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ step: nextStep }),
+      });
+    } catch (e) {
+      console.error("Failed to run next demo step", e);
+    } finally {
+      await refreshData();
+    }
   };
 
   const handleResetDemo = async () => {
     setDemoStep(0);
 
-    await fetch("/api/demo/step", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ reset: true }),
-    });
-
-    await refreshData();
+    try {
+      await fetch("/api/demo/step", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reset: true }),
+      });
+    } catch (e) {
+      console.error("Failed to reset demo", e);
+    } finally {
+      await refreshData();
+    }
   };
 
   const handleSendCommand = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!commandText.trim()) return;
 
-    await fetch("/api/ai/command", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        command: commandText,
-        agent: activeTab === "Overview" ? "AI Dispatcher" : activeTab,
-      }),
-    });
-
-    setCommandText("");
-    setCommandOpen(false);
-    await refreshData();
+    try {
+      await fetch("/api/ai/command", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          command: commandText,
+          agent: activeTab === "Overview" ? "AI Dispatcher" : activeTab,
+        }),
+      });
+    } catch (e) {
+      console.error("Failed to send AI command", e);
+    } finally {
+      setCommandText("");
+      setCommandOpen(false);
+      await refreshData();
+    }
   };
 
   const handleSendDraft = async (chatId: string) => {
     const responseToSend = chatOverrideText.trim();
     if (!responseToSend) return;
 
-    await fetch("/api/ai/approve-draft", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chatId,
-        text: responseToSend,
-      }),
-    });
-
-    setChatOverrideText("");
-    setSelectedChat(null);
-    await refreshData();
+    try {
+      await fetch("/api/ai/approve-draft", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chatId,
+          text: responseToSend,
+        }),
+      });
+    } catch (e) {
+      console.error("Failed to send draft approval", e);
+    } finally {
+      setChatOverrideText("");
+      setSelectedChat(null);
+      await refreshData();
+    }
   };
 
   useEffect(() => {
@@ -595,7 +611,11 @@ export default function Home() {
             <span className="material-symbols-outlined text-on-surface-variant">notifications</span>
             <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-error rounded-full"></span>
           </button>
-          <button className="hover:bg-surface-container-low rounded-full p-xs transition-colors">
+          <button 
+            onClick={() => setCommandOpen(true)}
+            className="hover:bg-surface-container-low rounded-full p-xs transition-colors"
+            title="Ask AI"
+          >
             <span className="material-symbols-outlined text-on-surface-variant">smart_toy</span>
           </button>
           <div className="h-8 w-[1px] bg-outline-variant"></div>
